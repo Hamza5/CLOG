@@ -17,20 +17,21 @@ LOOP FOR|PAS
 KEYWORD {TYPE}|{COMP_OPERATOR}|{LOGIC_OPERATOR}|{IO}|{CONDITION}|{LOOP}
 SEPARATOR {ARITH_OPERATOR}|";"|"{"|"}"|"("|")"|"="|":"|"["|"]"|","|"@"
 %%
-{INTEGER} {printf("%s est un INTEGER\n",yytext);}
-{FLOAT} {printf("%s est un FLOAT\n",yytext);}
-{CHAR} {printf("%s est un CHAR\n",yytext);}
-{STRING} {printf("%s est un STRING\n",yytext);}
-{KEYWORD} {printf("%s est un KEYWORD\n",yytext);}
-{SEPARATOR} {printf("%s est un SEPARATOR\n",yytext);}
-{IDENTIFIER} {printf("%s est un IDENTIFIER\n",yytext);}
-"//".+ {printf("%s est un COMMENT\n",yytext);}
-.+ {printf("%s ERREUR\n",yytext);}
+{INTEGER} {inserer(yytext);}
+{FLOAT} {inserer(yytext);}
+{CHAR} {inserer(yytext);}
+{STRING} {inserer(yytext);}
+{KEYWORD} {inserer(yytext);}
+{SEPARATOR} {inserer(yytext);}
+{IDENTIFIER} {inserer(yytext);}
+"//".+ {}
+.+ {printf("Erreur lexical : ligne %d : %s\n",yylineno,yytext);}
 %%
 int main(int argc, char * argv[]){
 	if(argc==2){
 		yyin = fopen(argv[1],"r");
 	}
 	yylex();
+	afficher();
 	return 0;
 }
