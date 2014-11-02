@@ -23,6 +23,6 @@ void afficher(){
 	printf("|%-10s|\n","Nom");
 	printf("------------\n");
 	int i;
-	for(i=0;i<fin;i++) printf("|%-10s|\n",ts[i].nom);
+	for(i=0;i<=fin;i++) printf("|%-10s|\n",ts[i].nom);
 	printf("------------\n");
 }
