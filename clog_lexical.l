@@ -25,19 +25,19 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 	if(yytext[0]=='(') entier = strtol(yytext+1, NULL, 10); // Le 1er caractère est le +/-
 	else entier = strtol(yytext, NULL, 10);
 	if(entier >= -32768 && entier <= 32767){
-		inserer(yytext);
+		inserer(yytext, 'N', yyleng);
 		column+=yyleng;
 	}
 	else printf("Dépassement de capacité : ligne %d : %s\n", yylineno, yytext);
 }
-{FLOAT} {inserer(yytext); column+=yyleng;}
-{CHAR} {inserer(yytext); column+=yyleng;}
-{STRING} {inserer(yytext); column+=yyleng;}
-{KEYWORD} {inserer(yytext); column+=yyleng;}
-{ARITH_OPERATOR} {inserer(yytext); column+=yyleng;}
-{SEPARATOR} {inserer(yytext); column+=yyleng;}
-{IDENTIFIER} {inserer(yytext); column+=yyleng;} 
-"//".+ {}
+{FLOAT} {inserer(yytext, 'F', yyleng); column+=yyleng;}
+{CHAR} {inserer(yytext, 'C', yyleng); column+=yyleng;}
+{STRING} {inserer(yytext, 'T', yyleng); column+=yyleng;}
+{KEYWORD} {inserer(yytext, 'K', yyleng); column+=yyleng;}
+{ARITH_OPERATOR} {inserer(yytext, 'O', yyleng); column+=yyleng;}
+{SEPARATOR} {inserer(yytext, 'S', yyleng); column+=yyleng;}
+{IDENTIFIER} {inserer(yytext, 'I', yyleng); column+=yyleng;} 
+"//".+ {} // Ignorer les commentaires
 [a-z]+|. {printf("Erreur lexical : ligne %d colonne %d : %s\n",line,column,yytext);}
 \n {line++; column=0;}
 %%
