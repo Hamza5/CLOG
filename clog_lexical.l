@@ -22,13 +22,13 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 %%
 {INTEGER} {
 	long int entier;
-	if(yytext[0]=='(') entier = strtol(yytext+1, NULL, 10); // Le 1er caractère est le +/-
-	else entier = strtol(yytext, NULL, 10);
+	if(yytext[0]=='(') entier = strtol(yytext+1, NULL, 10); // Si le 1er caractère est le ( alors commencer la convertion de +/- (Position n°1)
+	else entier = strtol(yytext, NULL, 10); // Sinon, convertir toute l'entité
 	if(entier >= -32768 && entier <= 32767){
 		inserer(yytext, 'N', yyleng);
 		column+=yyleng;
 	}
-	else printf("Dépassement de capacité : ligne %d : %s\n", yylineno, yytext);
+	else printf("Dépassement de capacité : ligne %d colonne %d : %s\n", line, column, yytext);
 }
 {FLOAT} {inserer(yytext, 'F', yyleng); column+=yyleng;}
 {CHAR} {inserer(yytext, 'C', yyleng); column+=yyleng;}
@@ -39,7 +39,7 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 {IDENTIFIER} {inserer(yytext, 'I', yyleng); column+=yyleng;} 
 "//".+ {} // Ignorer les commentaires
 [a-z]+|. {printf("Erreur lexical : ligne %d colonne %d : %s\n",line,column,yytext);}
-\n {line++; column=0;}
+\n {line++; column=1;}
 %%
 int main(int argc, char * argv[]){
 	if(argc==2){
