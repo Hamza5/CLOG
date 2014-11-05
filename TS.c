@@ -14,13 +14,13 @@ int rechercher(const char * entite){
 	if(i==fin) return -1; // Entité non trouvée
 	else return i; // L'indice de l'entité
 }
-void inserer(const char * entite, char type, unsigned short taille){
+void inserer(const char * entite, char type, char nature, unsigned short taille){
 	int position = rechercher(entite);
 	if(position==-1){ // Nouvelle entité
-		fin++;
 		strcpy(ts[fin].nom,entite); // Insérer le nom de l'entité
 		ts[fin].type = type; // Insérer le type de l'entité
 		ts[fin].taille = taille; // Insérer la taille de l'entité
+		fin++;
 	}
 }
 void afficher(){
@@ -28,7 +28,7 @@ void afficher(){
 	printf("|%-39s|%4s|%s|\n","Nom","Type","Taille");
 	printf("---------------------------------------.----.--------\n");
 	int i;
-	for(i=0;i<=fin;i++){
+	for(i=0;i<fin;i++){
 		printf("|%-39s|%3c|%8d|\n", ts[i].nom, ts[i].type, ts[i].taille);
 		printf("---------------------------------------.----.--------\n");
 	}
