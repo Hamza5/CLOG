@@ -25,18 +25,18 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 	if(yytext[0]=='(') entier = strtol(yytext+1, NULL, 10); // Si le 1er caractère est le ( alors commencer la convertion de +/- (Position n°1)
 	else entier = strtol(yytext, NULL, 10); // Sinon, convertir toute l'entité
 	if(entier >= -32768 && entier <= 32767){
-		inserer(yytext, 'N', '\0', yyleng);
+		inserer(yytext, 'N', 'C', yyleng);
 		column+=yyleng;
 	}
 	else printf("Dépassement de capacité : ligne %d colonne %d : %s\n", line, column, yytext);
 }
-{FLOAT} {inserer(yytext, 'F', '\0', yyleng); column+=yyleng;}
-{CHAR} {inserer(yytext, 'C', '\0', yyleng); column+=yyleng;}
-{STRING} {inserer(yytext, 'T', '\0', yyleng); column+=yyleng;}
-{KEYWORD} {inserer(yytext, 'K', '\0', yyleng); column+=yyleng;}
-{ARITH_OPERATOR} {inserer(yytext, 'O', '\0', yyleng); column+=yyleng;}
-{SEPARATOR} {inserer(yytext, 'S', '\0', yyleng); column+=yyleng;}
-{IDENTIFIER} {inserer(yytext, 'I', '\0', yyleng); column+=yyleng;} 
+{FLOAT} {inserer(yytext, 'F', 'C', yyleng); column+=yyleng;}
+{CHAR} {inserer(yytext, 'C', 'C', yyleng); column+=yyleng;}
+{STRING} {inserer(yytext, 'T', 'C', yyleng); column+=yyleng;}
+{KEYWORD} {inserer(yytext, 'K', 'C', yyleng); column+=yyleng;}
+{ARITH_OPERATOR} {inserer(yytext, 'O', 'C', yyleng); column+=yyleng;}
+{SEPARATOR} {inserer(yytext, 'S', 'C', yyleng); column+=yyleng;}
+{IDENTIFIER} {inserer(yytext, 'I', 'V', yyleng); column+=yyleng;} 
 "//".+ {} // Ignorer les commentaires
 [a-z]+|. {printf("Erreur lexical : ligne %d colonne %d : %s\n",line,column,yytext);}
 \n {line++; column=1;}
