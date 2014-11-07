@@ -6,9 +6,13 @@ unsigned short line = 1;
 unsigned short column = 1;
 %}
 INTEGER 0|[1-9][0-9]*|\([-+][0-9]+\)
+	// 0 15 (+172) (-22) ...
 FLOAT ((0|[1-9][0-9]*)\.[0-9]+)|\([-+][0-9]+\.[0-9]+\)
+	// 0.521 (+3.0) (-193.56) ...
 CHAR \'.\'
+	// 'H' '5' ...
 STRING \".*\"
+	// "CLOG" "Hello" "" ...
 TYPE INTEGER|FLOAT|CHAR|STR|CONST|VECTOR
 ARITH_OPERATOR "+"|"-"|"*"|"/"
 LOGIC_OPERATOR AND|OR|NOT
@@ -19,6 +23,7 @@ LOOP FOR|PAS
 KEYWORD {TYPE}|{COMP_OPERATOR}|{LOGIC_OPERATOR}|{IO}|{CONDITION}|{LOOP}
 SEPARATOR ";"|"{"|"}"|"("|")"|"="|":"|"["|"]"|","|"@"|" "|\t
 IDENTIFIER [A-Z][a-z0-9]{0,7}
+	// Compil Tp5 ...
 %%
 {INTEGER} {
 	long int entier;
@@ -42,10 +47,15 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 \n {line++; column=1;}
 %%
 int main(int argc, char * argv[]){
-	if(argc==2){
-		yyin = fopen(argv[1],"r");
+	if(argc > 1){
+		int i;
+		for(i=1; i<argc; i++){
+			printf("\nAnalyse lexical du fichier %s\n", argv[i]);
+			yyin = fopen(argv[i],"r");
+			yylex();
+			afficher();
+		}
 	}
-	yylex();
-	afficher();
+	else printf("Usage : %s 'Chemin_du_fichier'\n", argv[0]);
 	return 0;
 }
