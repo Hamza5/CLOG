@@ -1,36 +1,76 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
 #include "TS.h"
-typedef struct elements {char nom[40]; char type; char nature; unsigned short taille;} element;
-// nom : AND 25.5 (-2) ; Idf "Programme" 'Y' ...
-// type : K (Mot-clé), I (Identificateur), S (Séparateur), O (Opérateur), N (Entier), F (Décimal), C (Caractère), T (Chaîne de caractères)
-// nature : C (Constante), V (Variable)
-// taille : en octets
-element ts[500]; // Le tableau de symbols
-unsigned short fin = 0;
-int rechercher(const char * entite){
-	int i;
-	for(i=0; i<fin && strcmp(ts[i].nom, entite)!=0; i++); // Parcourir le tableau de début jusqu'à le dernière entité
-	if(i==fin) return -1; // Entité non trouvée
-	else return i; // L'indice de l'entité
+
+liste * tete = NULL;
+liste *p;
+liste * rechercher(const char * entite){
+    liste *q;
+	q=tete;
+    for(;q!=NULL && strcmp(q->elm.nom,entite);q=q->svt);
+	return  q; // Entité trouvée ou NULL
 }
-void inserer(const char * entite, char type, char nature, unsigned short taille){
-	int position = rechercher(entite);
-	if(position==-1){ // Nouvelle entité
-		strcpy(ts[fin].nom,entite); // Insérer le nom de l'entité
-		ts[fin].type = type; // Insérer le type de l'entité
-		ts[fin].nature = nature; // Insérer la nature de l'entité
-		ts[fin].taille = taille; // Insérer la taille de l'entité
-		fin++;
+char * type_str(char t);
+void inserer(const char * entite, const char type, const char nature, const unsigned short taille){
+    liste *q;
+    liste * position = rechercher(entite);
+   if(position==NULL){ // Nouvelle entité
+
+         if(tete==NULL){
+                p=(liste*)malloc(sizeof(liste));
+                strcpy(p->elm.nom,entite); // Insérer le nom de l'entité
+                p->elm.type = type; // Insérer le type de l'entité
+                p->elm.nature = nature; // Insérer la nature de l'entité
+                p->elm.taille = taille; // Insérer la taille de l'entité
+                tete=p;
+                p->svt=NULL;
+       }
+         else { q=(liste*)malloc(sizeof(liste));
+                p->svt=q;
+                strcpy(q->elm.nom,entite); // Insérer le nom de l'entité
+                q->elm.type = type; // Insérer le type de l'entité
+                q->elm.nature = nature; // Insérer la nature de l'entité
+                q->elm.taille = taille; // Insérer la taille de l'entité
+                q->svt=NULL;
+                p=q;
+                 }  // Insérer l'entité
+
+
 	}
+
+
 }
 void afficher(){
-	printf("---------------------------------------.-----.------.-------\n");
-	printf("|%-39s|%4s|%6s|%s|\n","Nom","Type","Nature","Taille");
-	printf("---------------------------------------.-----.------.-------\n");
-	int i;
-	for(i=0;i<fin;i++){
-		printf("|%-39s|%-4c|%-6c|%7d|\n", ts[i].nom, ts[i].type, ts[i].nature, ts[i].taille);
-		printf("---------------------------------------.-----.------.-------\n");
+    liste *v;
+    v=tete;
+	printf("---------------------------------------.---------------------.-------.\n");
+	printf("|%-39s|%-21s|%s|\n","Nom","Type","Taille");
+	printf("---------------------------------------.---------------------.-------.\n");
+	while(v!=NULL){
+        printf("|%-39s|%-21s|%7d|\n", v->elm.nom, type_str(v->elm.type), v->elm.taille);
+		printf("---------------------------------------.---------------------.-------.\n");
+        v=v->svt;
+    }
+}
+char * type_str(char t){
+	switch(t){
+		case 'K':
+			return "Mot-clé";
+		case 'I':
+			return "Identificateur";
+		case 'S':
+			return "Séparateur";
+		case 'O':
+			return "Opérateur";
+		case 'N':
+			return "Entier";
+		case 'F':
+			return "Décimal";
+		case 'C':
+			return "Caractère";
+		case 'T':
+			return "Chaine de caractères";
 	}
 }
