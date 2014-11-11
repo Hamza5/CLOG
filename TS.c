@@ -45,12 +45,12 @@ void inserer(const char * entite, const char type, const char nature, const unsi
 void afficher(){
     liste *v;
     v=tete;
-	printf("---------------------------------------.---------------------.-------.\n");
-	printf("|%-39s|%-21s|%s|\n","Nom","Type","Taille");
-	printf("---------------------------------------.---------------------.-------.\n");
+	printf("---------------------------------------.--------------------.-------.\n");
+	printf("|%-38s|%-21s|%s|\n","Nom","Type","Taille");
+	printf("---------------------------------------.--------------------.-------.\n");
 	while(v!=NULL){
-        printf("|%-39s|%-21s|%7d|\n", v->elm.nom, type_str(v->elm.type), v->elm.taille);
-		printf("---------------------------------------.---------------------.-------.\n");
+        printf("|%-38s|%-21s|%7d|\n", v->elm.nom, type_str(v->elm.type), v->elm.taille);
+		printf("---------------------------------------.--------------------.-------.\n");
         v=v->svt;
     }
 }
