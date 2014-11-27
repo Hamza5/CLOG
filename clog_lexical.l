@@ -5,6 +5,7 @@
 #include "clog_syntaxique.tab.h"
 unsigned short line = 1;
 unsigned short column = 1;
+unsigned short errors = 0;
 %}
 INTEGER 0|[1-9][0-9]*|\([-+][0-9]+\)
 	// 0 15 (+172) (-22) ...
@@ -193,6 +194,7 @@ END {
 "//".* {} // Ignorer les commentaires
 \n {line++; column=1;}
 [a-z]+|. {
+	errors++;
 	printf("Erreur lexical : ligne %d colonne %d : %s\n",line,column,yytext);
 	column+=yyleng;
 }

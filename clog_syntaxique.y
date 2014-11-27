@@ -3,6 +3,7 @@
 extern FILE * yyin;
 extern ts;
 extern unsigned short line, column;
+extern unsigned short errors;
 %}
 %union{
 	int entier;
@@ -30,12 +31,19 @@ instruction : affectation | function | condition | loop ;
 function :
 			READ OPEN_PARENT STRING DOUBLE_DOT AT IDENTIFIER CLOSE_PARENT SEMICOLON |
 			DISPLAY OPEN_PARENT STRING DOUBLE_DOT IDENTIFIER CLOSE_PARENT SEMICOLON;
-loop : ;
-condition :;
+loop : FOR OPEN_PARENT IDENTIFIER DOUBLE_DOT arithmetic_expression DOUBLE_DOT arithmetic_expression CLOSE_PARENT code END;
+arithmetic_expression:
+			OPEN_PARENT arithmetic_expression CLOSE_PARENT |
+			arithmetic_expression ARITH_OPERATOR arithmetic_expression |
+			IDENTIFIER | INTEGER | FLOAT;
+condition : ;
+boolean_expression :;
 affectation :;
 %%
 int yyerror(char * message){
+	errors++;
 	printf("Erreur syntaxique : ligne %u colonne %u\n", line, column);
+	return 1;
 }
 int main(int argc, char * argv[]){
 	if(argc > 1){
@@ -44,8 +52,10 @@ int main(int argc, char * argv[]){
 			printf("\nAnalyse lexical & syntaxique du fichier %s\n", argv[i]);
 			yyin = fopen(argv[i],"r");
 			yyparse();
-			printf("Analyse terminée\n");
-			afficher();
+			if(errors==0){
+				printf("Analyse terminée. Aucune erreur n'est trouvée.\n");
+				afficher();
+			}
 		}
 	}
 	else printf("Usage : %s 'Chemin_du_fichier'\n", argv[0]);
