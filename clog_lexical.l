@@ -18,7 +18,6 @@ TYPE INTEGER|FLOAT|CHAR|STR
 ARITH_OPERATOR "+"|"-"|"*"|"/"
 LOGIC_OPERATOR AND|OR|NOT
 COMP_OPERATOR G|L|GE|LE|EQ|DI
-FUNCTION READ|DISPLAY
 IDENTIFIER [A-Z][a-z0-9]{0,7}
 	// Compil Tp5 ...
 %%
@@ -91,10 +90,15 @@ VECTOR {
 	yylval.entite = yytext;
 	return ARITH_OPERATOR;
 }
-{FUNCTION} {
+READ {
 	column+=yyleng;
 	yylval.entite = yytext;
-	return FUNCTION;
+	return READ;
+}
+DISPLAY {
+	column+=yyleng;
+	yylval.entite = yytext;
+	return DISPLAY;
 }
 IF {
 	column+=yyleng;
