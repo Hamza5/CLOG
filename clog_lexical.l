@@ -16,8 +16,6 @@ CHAR \'.\'
 STRING \".*\"
 	// "CLOG" "Hello" "" ...
 TYPE INTEGER|FLOAT|CHAR|STR
-ARITH_OPERATOR "+"|"-"|"*"|"/"
-LOGIC_OPERATOR AND|OR|NOT
 COMP_OPERATOR G|L|GE|LE|EQ|DI
 IDENTIFIER [A-Z][a-z0-9]{0,7}
 	// Compil Tp5 ...
@@ -80,16 +78,44 @@ VECTOR {
 	yylval.entite = yytext;
 	return COMP_OPERATOR;
 }
-{LOGIC_OPERATOR} {
+NOT {
 	column+=yyleng;
 	yylval.entite = yytext;
-	return LOGIC_OPERATOR;
+	return AND;
 }
-{ARITH_OPERATOR} {
+AND {
+	column+=yyleng;
+	yylval.entite = yytext;
+	return AND;
+}
+OR {
+	column+=yyleng;
+	yylval.entite = yytext;
+	return OR;
+}
+"+" {
 	/*inserer(yytext, 'O', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
-	return ARITH_OPERATOR;
+	return PLUS;
+}
+"-" {
+	/*inserer(yytext, 'O', 'C', yyleng);*/
+	column+=yyleng;
+	yylval.entite = yytext;
+	return MINUS;
+}
+"*" {
+	/*inserer(yytext, 'O', 'C', yyleng);*/
+	column+=yyleng;
+	yylval.entite = yytext;
+	return STAR;
+}
+"/" {
+	/*inserer(yytext, 'O', 'C', yyleng);*/
+	column+=yyleng;
+	yylval.entite = yytext;
+	return SLASH;
 }
 READ {
 	column+=yyleng;

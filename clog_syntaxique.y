@@ -10,12 +10,14 @@ extern unsigned short errors;
 	float decimal;
 	char * entite;
 }
-%token INTEGER FLOAT CHAR STRING CONST VECTOR
-%token TYPE IDENTIFIER
-%token COMP_OPERATOR ARITH_OPERATOR LOGIC_OPERATOR
-%token IF ELSE FOR END
-%token READ DISPLAY
-%token SEMICOLON OPEN_ACO CLOSE_ACO OPEN_PARENT CLOSE_PARENT EQUAL DOUBLE_DOT OPEN_BRACE CLOSE_BRACE COMMA AT PIPE
+%left OR
+%left AND
+%left NOT
+%left COMP_OPERATOR
+%left PLUS MINUS
+%left STAR SLASH
+%left OPEN_PARENT CLOSE_PARENT
+%token INTEGER FLOAT CHAR STRING CONST VECTOR TYPE IDENTIFIER IF ELSE FOR END READ DISPLAY SEMICOLON OPEN_ACO CLOSE_ACO EQUAL DOUBLE_DOT OPEN_BRACE CLOSE_BRACE COMMA AT PIPE
 %start S
 %%
 S : IDENTIFIER OPEN_ACO OPEN_ACO var_dec CLOSE_ACO OPEN_ACO code CLOSE_ACO CLOSE_ACO;
@@ -27,22 +29,28 @@ var_dec :
 sep : PIPE IDENTIFIER sep | SEMICOLON var_dec;
 value : INTEGER | FLOAT | CHAR | STRING;
 code : instruction code | ;
-instruction : affectation | function | condition | loop ;
+instruction : /*affectation |*/ function | condition | loop ;
 function :
-			READ OPEN_PARENT STRING DOUBLE_DOT AT IDENTIFIER CLOSE_PARENT SEMICOLON |
-			DISPLAY OPEN_PARENT STRING DOUBLE_DOT IDENTIFIER CLOSE_PARENT SEMICOLON;
+			READ OPEN_PARENT STRING DOUBLE_DOT AT IDENTIFIER CLOSE_PARENT SEMICOLON | /* Fonction READ */
+			DISPLAY OPEN_PARENT STRING DOUBLE_DOT IDENTIFIER CLOSE_PARENT SEMICOLON; /* Fonction DISPLAY */
 loop : FOR OPEN_PARENT IDENTIFIER DOUBLE_DOT arithmetic_expression DOUBLE_DOT arithmetic_expression CLOSE_PARENT code END;
-arithmetic_expression:
+arithmetic_expression :
 			OPEN_PARENT arithmetic_expression CLOSE_PARENT |
-			arithmetic_expression ARITH_OPERATOR arithmetic_expression |
-			IDENTIFIER | INTEGER | FLOAT;
-condition : ;
-boolean_expression :;
-affectation :;
+			arithmetic_expression PLUS arithmetic_expression | arithmetic_expression MINUS arithmetic_expression | /* A + B | A - B */
+			arithmetic_expression STAR arithmetic_expression | arithmetic_expression SLASH arithmetic_expression | /* A * B | A / B */
+			IDENTIFIER | value;
+condition : IF OPEN_PARENT logic_expression CLOSE_PARENT DOUBLE_DOT code else; /* IF avec ou sans ELSE */
+else : ELSE DOUBLE_DOT code END | END;
+logic_expression :
+			OPEN_PARENT logic_expression CLOSE_PARENT | logic_expression OR logic_expression | /* (L) | L OR M */
+			logic_expression AND logic_expression | NOT logic_expression | comparison; /* L AND M | NOT L */
+comparison :
+			arithmetic_expression COMP_OPERATOR arithmetic_expression; /* C < D | C <= D | C > D | C >= D | C == D | C != D */
+//affectation :;
 %%
 int yyerror(char * message){
 	errors++;
-	printf("Erreur syntaxique : ligne %u colonne %u\n", line, column);
+	printf("Erreur syntaxique : ligne %u colonne %u : %s\n", line, column, yylval.entite);
 	return 1;
 }
 int main(int argc, char * argv[]){
