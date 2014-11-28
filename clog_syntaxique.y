@@ -29,7 +29,7 @@ var_dec :
 sep : PIPE IDENTIFIER sep | SEMICOLON var_dec;
 value : INTEGER | FLOAT | CHAR | STRING;
 code : instruction code | ;
-instruction : /*affectation |*/ function | condition | loop ;
+instruction : affectation | function | condition | loop ;
 function :
 			READ OPEN_PARENT STRING DOUBLE_DOT AT IDENTIFIER CLOSE_PARENT SEMICOLON | /* Fonction READ */
 			DISPLAY OPEN_PARENT STRING DOUBLE_DOT IDENTIFIER CLOSE_PARENT SEMICOLON; /* Fonction DISPLAY */
@@ -38,15 +38,15 @@ arithmetic_expression :
 			OPEN_PARENT arithmetic_expression CLOSE_PARENT |
 			arithmetic_expression PLUS arithmetic_expression | arithmetic_expression MINUS arithmetic_expression | /* A + B | A - B */
 			arithmetic_expression STAR arithmetic_expression | arithmetic_expression SLASH arithmetic_expression | /* A * B | A / B */
-			IDENTIFIER | value;
+			IDENTIFIER | INTEGER | FLOAT;
 condition : IF OPEN_PARENT logic_expression CLOSE_PARENT DOUBLE_DOT code else; /* IF avec ou sans ELSE */
 else : ELSE DOUBLE_DOT code END | END;
 logic_expression :
 			OPEN_PARENT logic_expression CLOSE_PARENT | logic_expression OR logic_expression | /* (L) | L OR M */
 			logic_expression AND logic_expression | NOT logic_expression | comparison; /* L AND M | NOT L */
-comparison :
-			arithmetic_expression COMP_OPERATOR arithmetic_expression; /* C < D | C <= D | C > D | C >= D | C == D | C != D */
-//affectation :;
+comparison : expression COMP_OPERATOR expression; /* C < D | C <= D | C > D | C >= D | C == D | C != D */
+affectation : IDENTIFIER EQUAL expression SEMICOLON;
+expression : arithmetic_expression | CHAR | STRING;
 %%
 int yyerror(char * message){
 	errors++;
