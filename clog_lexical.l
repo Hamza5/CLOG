@@ -15,7 +15,7 @@ CHAR \'.\'
 	// 'H' '5' ...
 STRING \".*\"
 	// "CLOG" "Hello" "" ...
-TYPE INTEGER|FLOAT|CHAR|STR
+TYPE INTEGER|FLOAT|CHAR|STRING
 COMP_OPERATOR G|L|GE|LE|EQ|DI
 IDENTIFIER [A-Z][a-z0-9]{0,7}
 	// Compil Tp5 ...
@@ -60,7 +60,10 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 	/*inserer(yytext, 'K', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
-	return TYPE;
+	if(!strcmp(yytext,"INTEGER")) return TYPE_INTEGER;
+	else if(!strcmp(yytext,"FLOAT")) return TYPE_FLOAT;
+	else if(!strcmp(yytext,"CHAR")) return TYPE_CHAR;
+	else return TYPE_STRING;
 }
 CONST {
 	column+=yyleng;

@@ -13,6 +13,7 @@ liste * rechercher(const char * entite){
 	return  q; // Entité trouvée ou NULL
 }
 char * type_str(char t);
+char * nature_str(char n);
 void inserer(const char * entite, const char type, const char nature, const unsigned short taille){
     liste *q;
     liste * position = rechercher(entite);
@@ -45,12 +46,12 @@ void inserer(const char * entite, const char type, const char nature, const unsi
 void afficher(){
     liste *v;
     v=tete;
-	printf("+--------------------------------------+--------------------+-------+\n");
-	printf("|%-38s|%-20s|%-7s|\n","Nom","Type","Taille");
-	printf("+--------------------------------------+--------------------+-------+\n");
+	printf("+--------+--------------------+----------+-------+\n");
+	printf("|%-8s|%-20s|%-10s|%-7s|\n","Nom","Type","Nature","Taille");
+	printf("+--------+--------------------+----------+-------+\n");
 	while(v!=NULL){
-        printf("|%-38s|%-21s|%7d|\n", v->elm.nom, type_str(v->elm.type), v->elm.taille);
-		printf("+--------------------------------------+--------------------+-------+\n");
+        printf("|%-8s|%-20s|%-10s|%7d|\n", v->elm.nom, type_str(v->elm.type), nature_str(v->elm.nature), v->elm.taille);
+		printf("+--------+--------------------+----------+-------+\n");
         v=v->svt;
     }
 }
@@ -72,5 +73,13 @@ char * type_str(char t){
 			return "Caractère";
 		case 'T':
 			return "Chaine de caractères";
+	}
+}
+char * nature_str(char n){
+	switch(n){
+		case 'V':
+			return "Variable";
+		case 'C':
+			return "Constante";
 	}
 }

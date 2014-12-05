@@ -1,15 +1,20 @@
 %{
 #include <stdio.h>
+#include "fonctions_semantiques.h"
 extern FILE * yyin;
 extern ts;
 extern unsigned short line, column;
 extern unsigned short errors;
+extern int yyleng;
+char type;
 %}
 %union{
 	int entier;
 	float decimal;
 	char * entite;
 }
+%token <entite> IDENTIFIER
+%type <entite> type
 %left OR
 %left AND
 %left NOT
@@ -17,17 +22,20 @@ extern unsigned short errors;
 %left PLUS MINUS
 %left STAR SLASH
 %left OPEN_PARENT CLOSE_PARENT
-%token INTEGER FLOAT CHAR STRING CONST VECTOR TYPE IDENTIFIER IF ELSE FOR END READ DISPLAY SEMICOLON OPEN_ACO CLOSE_ACO EQUAL DOUBLE_DOT OPEN_BRACE CLOSE_BRACE COMMA AT PIPE
+%token INTEGER FLOAT CHAR STRING CONST VECTOR TYPE_INTEGER TYPE_FLOAT TYPE_CHAR TYPE_STRING IF ELSE FOR END READ DISPLAY SEMICOLON OPEN_ACO CLOSE_ACO EQUAL DOUBLE_DOT OPEN_BRACE CLOSE_BRACE COMMA AT PIPE
 %start S
 %%
 S : IDENTIFIER OPEN_ACO OPEN_ACO var_dec CLOSE_ACO OPEN_ACO code CLOSE_ACO CLOSE_ACO;
 var_dec :
-			TYPE DOUBLE_DOT IDENTIFIER sep | /* Variables */
-			CONST DOUBLE_DOT IDENTIFIER EQUAL value SEMICOLON var_dec | /* Constante */
-			VECTOR DOUBLE_DOT TYPE DOUBLE_DOT IDENTIFIER OPEN_BRACE INTEGER COMMA INTEGER CLOSE_BRACE SEMICOLON var_dec /* Tableau */
+			beginning_var sep /* Variables */
+			| CONST DOUBLE_DOT IDENTIFIER EQUAL value SEMICOLON var_dec /* Constante */
+			| VECTOR DOUBLE_DOT type DOUBLE_DOT IDENTIFIER OPEN_BRACE INTEGER COMMA INTEGER CLOSE_BRACE SEMICOLON var_dec /* Tableau */
 			|;
-sep : PIPE IDENTIFIER sep | SEMICOLON var_dec;
+beginning_var : type DOUBLE_DOT IDENTIFIER { type = $1[0]; declaration_variable($3, type, 'V', yyleng); };
+center_var : PIPE IDENTIFIER { declaration_variable($2, type, 'V', yyleng); };
+sep : center_var sep | SEMICOLON var_dec;
 value : INTEGER | FLOAT | CHAR | STRING;
+type : TYPE_INTEGER { $$ = "N"; }| TYPE_FLOAT { $$ = "F"; } | TYPE_CHAR { $$ = "C"; } | TYPE_STRING { $$ = "T"; };
 code : instruction code | ;
 instruction : affectation | function | condition | loop ;
 function :
