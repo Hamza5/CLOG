@@ -33,7 +33,7 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 		yylval.entier = entier;
 		return INTEGER;
 	}
-	else printf("Dépassement de capacité : ligne %d colonne %d : %s\n", line, column, yytext);
+	else fprintf(stderr, "Dépassement de capacité : ligne %d colonne %d : %s\n", line, column, yytext);
 }
 {FLOAT} {
 	double decimal;
@@ -224,7 +224,7 @@ END {
 \n {line++; column=1;}
 [a-z]+|. {
 	errors++;
-	printf("Erreur lexical : ligne %d colonne %d : %s\n",line,column,yytext);
+	fprintf(stderr, "Erreur lexical : ligne %d colonne %d : %s\n",line,column,yytext);
 	column+=yyleng;
 }
 %%

@@ -57,14 +57,6 @@ void afficher(){
 }
 char * type_str(char t){
 	switch(t){
-		case 'K':
-			return "Mot-clé";
-		case 'I':
-			return "Identificateur";
-		case 'S':
-			return "Séparateur";
-		case 'O':
-			return "Opérateur";
 		case 'N':
 			return "Entier";
 		case 'F':
@@ -73,6 +65,8 @@ char * type_str(char t){
 			return "Caractère";
 		case 'T':
 			return "Chaine de caractères";
+		default :
+			return "";
 	}
 }
 char * nature_str(char n){
@@ -81,5 +75,9 @@ char * nature_str(char n){
 			return "Variable";
 		case 'C':
 			return "Constante";
+		case 'T':
+			return "Vecteur";
+		default :
+			return "";
 	}
 }
