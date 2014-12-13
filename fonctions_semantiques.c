@@ -32,7 +32,7 @@ char verifierCompatibiliteArithmetique(char type1, char type2){
 	else if(type1=='F' && type2=='N' || type1=='N' && type2=='F') return 'F';
 	else{
 		errors++;
-		fprintf(stderr, "Erreur sémantique : ligne %u colonne %u : Les types %s et %s sont incompatibles !\n", line, column, type_str(type1), type_str(type2));
+		fprintf(stderr, "Erreur sémantique : ligne %u colonne %u : Les types %s et %s sont incompatibles pour une opération arithméthique !\n", line, column, type_str(type1), type_str(type2));
 		return '\0';
 	}
 }
@@ -40,7 +40,7 @@ int verifierCompatibiliteAffectation(char type1, char type2){
 	if(type1==type2) return 1;
 	else {
 		errors++;
-		fprintf(stderr, "Erreur sémantique : ligne %u colonne %u : Impossible d'affecter %s à %s !\n", line, column, type_str(type2), type_str(type1));
+		fprintf(stderr, "Erreur sémantique : ligne %u colonne %u : Impossible d'affecter un opérand %s à un opérand %s !\n", line, column, type_str(type2), type_str(type1));
 		return 0;
 	}
 }
@@ -89,4 +89,13 @@ int validerFormatDisplay(char * format, char type){
 	errors++;
 	fprintf(stderr, "Erreur sémantique : ligne %u colonne %u : L'identificateur de type %s ne correspend pas au formattage !\n", line, column, type_str(type));
 	return 0;
+}
+int verifierCompatibiliteComparaison(char type1, char type2){
+	if(type1==type2) return 1;
+	else if(type1=='F' && type2=='N' || type1=='N' && type2=='F') return 1;
+	else{
+		errors++;
+		fprintf(stderr, "Erreur sémantique : ligne %u colonne %u : Les types %s et %s sont incompatibles pour la comparaison !\n", line, column, type_str(type1), type_str(type2));
+		return 0;
+	}
 }

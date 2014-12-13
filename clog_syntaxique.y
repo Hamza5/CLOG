@@ -88,7 +88,7 @@ else : ELSE DOUBLE_DOT code END | END;
 logic_expression :
 			OPEN_PARENT logic_expression CLOSE_PARENT | logic_expression OR logic_expression | /* (L) | L OR M */
 			logic_expression AND logic_expression | NOT logic_expression | comparison; /* L AND M | NOT L */
-comparison : expression COMP_OPERATOR expression; /* C < D | C <= D | C > D | C >= D | C == D | C != D */
+comparison : expression COMP_OPERATOR expression { verifierCompatibiliteComparaison($1, $3); }; /* C < D | C <= D | C > D | C >= D | C == D | C != D */
 affectation : idf_vec EQUAL expression SEMICOLON { verifierCompatibiliteAffectation($1, $3); };
 expression : arithmetic_expression { $$ = $1; } | CHAR { $$ = 'C'; } | STRING { $$ = 'T'; };
 %%
