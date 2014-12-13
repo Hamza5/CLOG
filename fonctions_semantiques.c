@@ -71,3 +71,22 @@ int validerFormatRead(char * format, char type){
 	fprintf(stderr, "Erreur sémantique : ligne %u colonne %u : L'identificateur de type %s ne correspend pas au formattage !\n", line, column, type_str(type));
 	return 0;
 }
+int validerFormatDisplay(char * format, char type){
+	regex_t regexp;
+	int matched;
+	regcomp(&regexp, "\".*[$].*\"", 0);
+	matched = !regexec(&regexp, format, 0, NULL, 0);
+	if(matched && type == 'N') return 1;
+	regcomp(&regexp, "\".*%.*\"", 0);
+	matched = !regexec(&regexp, format, 0, NULL, 0);
+	if(matched && type == 'F') return 1;
+	regcomp(&regexp, "\".*#.*\"", 0);
+	matched = !regexec(&regexp, format, 0, NULL, 0);
+	if(matched && type == 'T') return 1;
+	regcomp(&regexp, "\".*&.*\"", 0);
+	matched = !regexec(&regexp, format, 0, NULL, 0);
+	if(matched && type == 'C') return 1;
+	errors++;
+	fprintf(stderr, "Erreur sémantique : ligne %u colonne %u : L'identificateur de type %s ne correspend pas au formattage !\n", line, column, type_str(type));
+	return 0;
+}

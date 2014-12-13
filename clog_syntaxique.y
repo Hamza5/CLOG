@@ -29,6 +29,7 @@ char * format;
 %type <caractere> arithmetic_expression
 %type <caractere> expression
 %type <entite> beginning_read
+%type <entite> beginning_display
 %left OR
 %left AND
 %left NOT
@@ -65,8 +66,9 @@ code : instruction code | ;
 instruction : affectation | function | condition | loop ;
 function :
 			beginning_read DOUBLE_DOT AT idf_vec CLOSE_PARENT SEMICOLON { validerFormatRead($1, $4); } /* Fonction READ */
-			| DISPLAY OPEN_PARENT STRING DOUBLE_DOT idf_vec CLOSE_PARENT SEMICOLON; /* Fonction DISPLAY */
+			| beginning_display DOUBLE_DOT idf_vec CLOSE_PARENT SEMICOLON { validerFormatDisplay($1, $3); }; /* Fonction DISPLAY */
 beginning_read : READ OPEN_PARENT STRING { $$ = $3; };
+beginning_display : DISPLAY OPEN_PARENT STRING { $$ = $3; };
 loop : FOR OPEN_PARENT IDENTIFIER DOUBLE_DOT arithmetic_expression DOUBLE_DOT arithmetic_expression CLOSE_PARENT code END;
 arithmetic_expression :
 			OPEN_PARENT arithmetic_expression CLOSE_PARENT { $$ = $2; }
