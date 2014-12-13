@@ -5,4 +5,5 @@ int verifierDeclaration(const char * variable);
 char verifierCompatibiliteArithmetique(char type1, char type2);
 int verifierCompatibiliteAffectation(char type1, char type2);
 int verifierIndiceVecteur(char type);
+int validerFormatRead(char * format, char type);
 #endif

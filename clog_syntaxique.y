@@ -10,6 +10,7 @@ extern unsigned short errors;
 extern int yyleng;
 char type;
 char identifier[9];
+char * format;
 %}
 %union{
 	int entier;
@@ -20,12 +21,14 @@ char identifier[9];
 %token <entite> IDENTIFIER
 %token <entier> INTEGER
 %token <caractere> FLOAT
+%token <entite> STRING
 %type <caractere> type
 %type <caractere> idf_vec
 %type <caractere> suite_idf_vec
 %type <caractere> beginning_idf_vec
 %type <caractere> arithmetic_expression
 %type <caractere> expression
+%type <entite> beginning_read
 %left OR
 %left AND
 %left NOT
@@ -33,7 +36,7 @@ char identifier[9];
 %left PLUS MINUS
 %left STAR SLASH
 %left OPEN_PARENT CLOSE_PARENT
-%token CHAR STRING CONST VECTOR TYPE_INTEGER TYPE_FLOAT TYPE_CHAR TYPE_STRING IF ELSE FOR END READ DISPLAY SEMICOLON OPEN_ACO CLOSE_ACO EQUAL DOUBLE_DOT OPEN_BRACE CLOSE_BRACE COMMA AT PIPE
+%token CHAR CONST VECTOR TYPE_INTEGER TYPE_FLOAT TYPE_CHAR TYPE_STRING IF ELSE FOR END READ DISPLAY SEMICOLON OPEN_ACO CLOSE_ACO EQUAL DOUBLE_DOT OPEN_BRACE CLOSE_BRACE COMMA AT PIPE
 %start S
 %%
 S : IDENTIFIER OPEN_ACO OPEN_ACO var_dec CLOSE_ACO OPEN_ACO code CLOSE_ACO CLOSE_ACO;
@@ -61,8 +64,9 @@ type : TYPE_INTEGER { $$ = 'N'; }| TYPE_FLOAT { $$ = 'F'; } | TYPE_CHAR { $$ = '
 code : instruction code | ;
 instruction : affectation | function | condition | loop ;
 function :
-			READ OPEN_PARENT STRING DOUBLE_DOT AT idf_vec CLOSE_PARENT SEMICOLON /* Fonction READ */
+			beginning_read DOUBLE_DOT AT idf_vec CLOSE_PARENT SEMICOLON { validerFormatRead($1, $4); } /* Fonction READ */
 			| DISPLAY OPEN_PARENT STRING DOUBLE_DOT idf_vec CLOSE_PARENT SEMICOLON; /* Fonction DISPLAY */
+beginning_read : READ OPEN_PARENT STRING { $$ = $3; };
 loop : FOR OPEN_PARENT IDENTIFIER DOUBLE_DOT arithmetic_expression DOUBLE_DOT arithmetic_expression CLOSE_PARENT code END;
 arithmetic_expression :
 			OPEN_PARENT arithmetic_expression CLOSE_PARENT { $$ = $2; }
