@@ -8,4 +8,6 @@ int verifierIndiceVecteur(char type);
 int validerFormatRead(char * format, char type);
 int validerFormatDisplay(char * format, char type);
 int verifierCompatibiliteComparaison(char type1, char type2);
+void afficher_quadr();
+void Quad(char *oper,char *op1,char *op2,char *res);
 #endif

@@ -12,7 +12,7 @@ liste * rechercher(const char * entite){
     for(;q!=NULL && strcmp(q->elm.nom,entite);q=q->svt);
 	return  q; // Entité trouvée ou NULL
 }
-char * type_str(char t);
+char * type_str(char t); // La définition de la fonction est en bas.
 char * nature_str(char n);
 void inserer(const char * entite, const char type, const char nature, const unsigned short taille){
     liste *q;

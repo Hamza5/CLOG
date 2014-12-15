@@ -28,7 +28,6 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 	if(yytext[0]=='(') entier = strtol(yytext+1, NULL, 10); // Si le 1er caractère est le ( alors commencer la convertion de +/- (Position n°1)
 	else entier = strtol(yytext, NULL, 10); // Sinon, convertir toute l'entité
 	if(entier >= -32768 && entier <= 32767){
-		/*inserer(yytext, 'N', 'C', yyleng);*/
 		column+=yyleng;
 		yylval.entier = entier;
 		return INTEGER;
@@ -39,25 +38,21 @@ IDENTIFIER [A-Z][a-z0-9]{0,7}
 	double decimal;
 	if(yytext[0]=='(') decimal = strtod(yytext+1, NULL); // Si le 1er caractère est le ( alors commencer la convertion de +/- (Position n°1)
 	else decimal = strtod(yytext, NULL); // Sinon, convertir toute l'entité
-	/*inserer(yytext, 'F', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.decimal = decimal;
 	return FLOAT;
 }
 {CHAR} {
-	/*inserer(yytext, 'C', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
 	return CHAR;
 }
 {STRING} {
-	/*inserer(yytext, 'T', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
 	return STRING;
 }
 {TYPE} {
-	/*inserer(yytext, 'K', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
 	if(!strcmp(yytext,"INTEGER")) return TYPE_INTEGER;
@@ -97,25 +92,21 @@ OR {
 	return OR;
 }
 "+" {
-	/*inserer(yytext, 'O', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
 	return PLUS;
 }
 "-" {
-	/*inserer(yytext, 'O', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
 	return MINUS;
 }
 "*" {
-	/*inserer(yytext, 'O', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
 	return STAR;
 }
 "/" {
-	/*inserer(yytext, 'O', 'C', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
 	return SLASH;
@@ -215,7 +206,6 @@ END {
 }
 
 {IDENTIFIER} {
-	/*inserer(yytext, 'I', 'V', yyleng);*/
 	column+=yyleng;
 	yylval.entite = yytext;
 	return IDENTIFIER;
